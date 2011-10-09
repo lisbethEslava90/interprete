@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-holaaaa!! prueba 1
-hollllaaaaa prueba2
-holaa prueba 3 -lis :)   
-=======
-holaaaa!! prueba 1
-hollllaaaaa prueba2
-Hola estoy lo hizo Jeison =)
->>>>>>> 68dbc0148de2ff2f6e4ce7dc658b0df66aa58659
+dfgdfg
