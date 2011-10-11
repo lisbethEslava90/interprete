@@ -36,11 +36,14 @@ import java.lang.*;
 
 
 %integer
+
 %class lexico
 
 digito		= [0-9]
 numero		= {digito}+
 letra		= [a-zA-Z]
+palabra         = {letra}+
+
 
 %%
 "END"		{ System.out.print("token END\n"); } 
@@ -54,6 +57,7 @@ letra		= [a-zA-Z]
 "WHILE"         { System.out.print("token WHILE\n"); }
 "WEND"          { System.out.print("token WEND\n"); }
 "IF"            { System.out.print("token IF\n"); }
+"END IF"            { System.out.print("token END IF\n"); }
 "ELSE"          { System.out.print("token ELSE\n"); }
 "LOOP"          { System.out.print("token LOOP\n"); }
 "UNTIL"         { System.out.print("token UNTIL\n"); }
@@ -67,9 +71,9 @@ letra		= [a-zA-Z]
 "STRING"        { System.out.print("token STR\n"); }
 "LONG"          { System.out.print("token LONG\n"); }
 "DOUBLE"        { System.out.print("token DOU\n"); }
-"ANDojoY"           { System.out.print("token AND\n"); }
-"ORojoO"            { System.out.print("token OR\n"); }
-"NOTojoNO"           { System.out.print("token NOT\n"); }
+"AND"           { System.out.print("token AND\n"); }
+"OR"            { System.out.print("token OR\n"); }
+"NOT"           { System.out.print("token NOT\n"); }
 "SELECT CASE"   { System.out.print("token SELC\n"); }
 "ELSEIF"        { System.out.print("token ELSIF\n"); }
 "TO"            { System.out.print("token TO\n"); }
