@@ -1,94 +1,171 @@
-import java.io.*;
-import java.lang.*;
+package flex;
+
+import java_cup.runtime.SymbolFactory;
 
 %%
-
+%cup
+%class Scanner
 %{
-	static FileInputStream FInStr = null;
-	static String fInName ; //nombre archivo entrada
-
-
-	public static void main (String argv[])
-	throws java.io.IOException {
-                argv = new String[]{"entrada.txt"};
-		int numparams = argv.length; //n�mero argumentos pasados
-
-		//Obtenci�n de par�metros pasados en l�nea de comandos
-		if ( numparams != 1) 
-		{ 	//error: nr. Par�metros incorrecto
-			System.out.println ("N�mero par�metros incorrecto!. Uso: ");
-			System.out.println ( "\tjava lexico archivo.EXT");
-			return; 
-		}
-		else 
-		{ 	fInName = argv[0];		
-			lexico yy = new lexico(new FileInputStream(fInName));
-			while (yy.yylex() != -1) ; 
-		}
-
-	} //Final main
+	public Scanner(java.io.InputStream r, SymbolFactory sf){
+		this(r);
+		this.sf=sf;
+		lineanum=0;
+		debug=true;
+	}
+	private SymbolFactory sf;
+	private int lineanum;
+	private boolean debug;
 %}
-
-
-%initthrow{ // Declaro el tipo de excepcion declarada en la clausula throw
-	FileNotFoundException
-%initthrow}
-
-
-%integer
-
-%class lexico
+%eofval{
+    return sf.newSymbol("EOF",sym.EOF);
+%eofval}
 
 digito		= [0-9]
 numero		= {digito}+
 letra		= [a-zA-Z]
-palabra         = {letra}+
-
-
+identificador	= {letra}+
+nuevalinea	= \n | \n\r | \r\n
+espacio		= [ \t]+
 %%
-"END"		{ System.out.print("token END\n"); } 
-"SUB"           { System.out.print("token SUB\n"); }
-"FUNCTION"      { System.out.print("token FUNC\n"); }
-"PRINT"         { System.out.print("token PRINT\n"); }
-"INPUT"         { System.out.print("token INPUT\n"); }
-"FOR"           { System.out.print("token FOR\n"); }
-"NEXT"          { System.out.print("token NEXT\n"); }
-"CLS"           { System.out.print("token CLS\n"); }
-"WHILE"         { System.out.print("token WHILE\n"); }
-"WEND"          { System.out.print("token WEND\n"); }
-"IF"            { System.out.print("token IF\n"); }
-"END IF"            { System.out.print("token END IF\n"); }
-"ELSE"          { System.out.print("token ELSE\n"); }
-"LOOP"          { System.out.print("token LOOP\n"); }
-"UNTIL"         { System.out.print("token UNTIL\n"); }
-"DO"            { System.out.print("token DO\n"); }
-"REM"           { System.out.print("token REM\n"); }
-"DIM"           { System.out.print("token DIM\n"); }
-"INTEGER"       { System.out.print("token INT\n"); }
-"AS"            { System.out.print("token AS\n"); }
-"SHARED"        { System.out.print("token SHA\n"); }
-"SINGLE"        { System.out.print("token SIN\n"); }
-"STRING"        { System.out.print("token STR\n"); }
-"LONG"          { System.out.print("token LONG\n"); }
-"DOUBLE"        { System.out.print("token DOU\n"); }
-"AND"           { System.out.print("token AND\n"); }
-"OR"            { System.out.print("token OR\n"); }
-"NOT"           { System.out.print("token NOT\n"); }
-"SELECT CASE"   { System.out.print("token SELC\n"); }
-"ELSEIF"        { System.out.print("token ELSIF\n"); }
-"TO"            { System.out.print("token TO\n"); }
-"+"             { System.out.print("token SUMA\n"); }
-"-"             { System.out.print("token RESTA\n"); }
-"*"             { System.out.print("token MULTIPLICA\n"); }
-"/"             { System.out.print("token DIVIDE\n"); }
-"MOD"           { System.out.print("token MOD\n"); }
-"<"             { System.out.print("token MENOR\n"); }
-">"             { System.out.print("token MAYOR\n"); }
-"<="            { System.out.print("token MENORI\n"); }
-">="            { System.out.print("token MAYORI\n"); }
-"="             { System.out.print("token IGUAL\n"); }
-"<>"            { System.out.print("token DIFERENTE\n"); }
-"("             { System.out.print("token PARENA\n"); }
-")"             { System.out.print("token PARENC\n"); }
-"^"             { System.out.print("token CIRCUN\n"); }
-"'"             { System.out.print("token COMILLA\n"); }
+"if"            {	if(debug) System.out.println("token IF");
+			return sf.newSymbol("IF",sym.IF);
+			}
+"else"          {	if(debug) System.out.println("token ELSE");
+			return sf.newSymbol("ELSE",sym.ELSE);
+			}
+"end"           {	if(debug) System.out.println("token END");
+			return sf.newSymbol("END",sym.END);
+			}
+"until"         {	if(debug) System.out.println("token UNTIL");
+			return sf.newSymbol("UNTIL",sym.UNTIL);
+			}
+"sub"           {	if(debug) System.out.println("token SUB");
+			return sf.newSymbol("SUB",sym.SUB);
+			}
+"function"      {	if(debug) System.out.println("token FUNC");
+			return sf.newSymbol("FUNC",sym.FUNC);
+			}
+"print"         {	if(debug) System.out.println("token PRINT");
+			return sf.newSymbol("PRINT",sym.PRINT);
+			}
+"input"         {	if(debug) System.out.println("token INPUT");
+			return sf.newSymbol("INPUT",sym.INPUT);
+			}
+"for"           {	if(debug) System.out.println("token FOR");
+			return sf.newSymbol("FOR",sym.FOR);
+			}
+"next"          {	if(debug) System.out.println("token NEXT");
+			return sf.newSymbol("NEXT",sym.NEXT);
+			}
+"then"          {	if(debug) System.out.println("token THEN");
+			return sf.newSymbol("THEN",sym.THEN);
+			}
+"cls"           {	if(debug) System.out.println("token CLS");
+			return sf.newSymbol("CLS",sym.CLS);
+			}
+"while"         {	if(debug) System.out.println("token WHILE");
+			return sf.newSymbol("WHILE",sym.WHILE);
+			}
+"wend"          {	if(debug) System.out.println("token WEND");
+			return sf.newSymbol("WEND",sym.WEND);
+			}
+"endif"         {	if(debug) System.out.println("token ENDIF");
+			return sf.newSymbol("ENDIF",sym.ENDIF);
+			}
+"loop"          {	if(debug) System.out.println("token LOOP");
+			return sf.newSymbol("LOOP",sym.LOOP);
+			}
+"do"            {	if(debug) System.out.println("token DO");
+			return sf.newSymbol("DO",sym.DO);
+			}
+"rem"           {	if(debug) System.out.println("token REM");
+			return sf.newSymbol("REM",sym.REM);
+			}
+"dim"           {	if(debug) System.out.println("token DIM");
+			return sf.newSymbol("DIM",sym.DIM);
+			}
+"integer"       {	if(debug) System.out.println("token INT");
+			return sf.newSymbol("INT",sym.INT);
+			}
+"as"            {	if(debug) System.out.println("token AS");
+			return sf.newSymbol("AS",sym.AS);
+			}
+"shared"        {	if(debug) System.out.println("token SHARED");
+			return sf.newSymbol("SHARED",sym.SHARED);
+			}
+"single"        {	if(debug) System.out.println("token SINGLE");
+			return sf.newSymbol("SINGLE",sym.SINGLE);
+			}
+"string"        {	if(debug) System.out.println("token STRING");
+			return sf.newSymbol("STRING",sym.STRING);
+			}
+"long"          {	if(debug) System.out.println("token LONG");
+			return sf.newSymbol("LONG",sym.LONG);
+			}
+"double"        {	if(debug) System.out.println("token DOU");
+			return sf.newSymbol("DOU",sym.DOU);
+			}
+"and"           {	if(debug) System.out.println("token AND");
+			return sf.newSymbol("AND",sym.AND);
+			}
+"or"            {	if(debug) System.out.println("token OR");
+			return sf.newSymbol("OR",sym.OR);
+			}
+"not"           {	if(debug) System.out.println("token NOT");
+			return sf.newSymbol("NOT",sym.NOT);
+			}
+"="             {	if(debug) System.out.println("token EQ");
+			return sf.newSymbol("EQ",sym.EQ);
+			}
+"<"             {	if(debug) System.out.println("token LT");
+			return sf.newSymbol("LT",sym.LT);
+			}
+">"             {	if(debug) System.out.println("token RT");
+			return sf.newSymbol("RT",sym.RT);
+			}
+">="            {	if(debug) System.out.println("token RTE");
+			return sf.newSymbol("RTE",sym.RTE);
+			}
+"<="            {	if(debug) System.out.println("token LTE");
+			return sf.newSymbol("LTE",sym.LTE);
+			}
+"<>"            {	if(debug) System.out.println("token DIF");
+			return sf.newSymbol("DIF",sym.DIF);
+			}
+"^"             {	if(debug) System.out.println("token CIR");
+			return sf.newSymbol("CIR",sym.CIR);
+			}
+"'"             {	if(debug) System.out.println("token CS");
+			return sf.newSymbol("CS",sym.CS);
+			}
+"+"             {	if(debug) System.out.println("token PLUS");
+			return sf.newSymbol("PLUS",sym.PLUS);
+			}
+"-"             {	if(debug) System.out.println("token MINUS");
+			return sf.newSymbol("MINUS",sym.MINUS);
+			}
+"*"             {	if(debug) System.out.println("token TIMES");
+			return sf.newSymbol("TIMES",sym.TIMES);
+			}
+"/"             {	if(debug) System.out.println("token OVER");
+			return sf.newSymbol("OVER",sym.OVER);
+			}
+"("             {	if(debug) System.out.println("token LPAREN");
+			return sf.newSymbol("LPAREN",sym.LPAREN);
+			}
+")"             {	if(debug) System.out.println("token RPAREN");
+			return sf.newSymbol("RPAREN",sym.RPAREN);
+			}
+";"             {	if(debug) System.out.println("token SEMI");
+			return sf.newSymbol("SEMI",sym.SEMI);
+			}
+{numero}        {	if(debug) System.out.println("token NUM");
+			return sf.newSymbol("NUM",sym.NUM,new Integer(yytext()));
+			}
+{identificador}	{	if(debug) System.out.println("token ID");
+				return sf.newSymbol("ID",sym.ID,new String(yytext()));
+			}
+{nuevalinea}       {lineanum++;}
+{espacio}    { /* saltos espacios en blanco*/}
+"{'[^}]+'}"  { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO"); }
+.               {System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");}
