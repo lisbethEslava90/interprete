@@ -24,7 +24,7 @@ digito		= [0-9]
 numero		= {digito}+
 letra		= [a-zA-Z]
 identificador	= {letra}+
-nuevalinea	= \n | \n\r | \r\n
+nuevalinea	= \n
 espacio		= [ \t]+
 %%
 "if"            {	if(debug) System.out.println("token IF");
@@ -53,6 +53,9 @@ espacio		= [ \t]+
 			}
 "for"           {	if(debug) System.out.println("token FOR");
 			return sf.newSymbol("FOR",sym.FOR);
+			}
+"to"            {	if(debug) System.out.println("token TO");
+			return sf.newSymbol("TO",sym.TO);
 			}
 "next"          {	if(debug) System.out.println("token NEXT");
 			return sf.newSymbol("NEXT",sym.NEXT);
@@ -90,12 +93,6 @@ espacio		= [ \t]+
 "as"            {	if(debug) System.out.println("token AS");
 			return sf.newSymbol("AS",sym.AS);
 			}
-"shared"        {	if(debug) System.out.println("token SHARED");
-			return sf.newSymbol("SHARED",sym.SHARED);
-			}
-"single"        {	if(debug) System.out.println("token SINGLE");
-			return sf.newSymbol("SINGLE",sym.SINGLE);
-			}
 "string"        {	if(debug) System.out.println("token STRING");
 			return sf.newSymbol("STRING",sym.STRING);
 			}
@@ -114,8 +111,17 @@ espacio		= [ \t]+
 "not"           {	if(debug) System.out.println("token NOT");
 			return sf.newSymbol("NOT",sym.NOT);
 			}
-"="             {	if(debug) System.out.println("token EQ");
-			return sf.newSymbol("EQ",sym.EQ);
+"step"          {	if(debug) System.out.println("token STEP");
+			return sf.newSymbol("STEP",sym.STEP);
+			}
+"mod"           {	if(debug) System.out.println("token MOD");
+			return sf.newSymbol("MOD",sym.MOD);
+			}
+"="             {	if(debug) System.out.println("token ASSIGN");
+			return sf.newSymbol("ASSIGN",sym.ASSIGN);
+			}
+"=="             {	if(debug) System.out.println("token COM");
+			return sf.newSymbol("COM",sym.COM);
 			}
 "<"             {	if(debug) System.out.println("token LT");
 			return sf.newSymbol("LT",sym.LT);
@@ -156,6 +162,9 @@ espacio		= [ \t]+
 ")"             {	if(debug) System.out.println("token RPAREN");
 			return sf.newSymbol("RPAREN",sym.RPAREN);
 			}
+","             {	if(debug) System.out.println("token COMA");
+			return sf.newSymbol("COMA",sym.COMA);
+			}
 ";"             {	if(debug) System.out.println("token SEMI");
 			return sf.newSymbol("SEMI",sym.SEMI);
 			}
@@ -165,7 +174,14 @@ espacio		= [ \t]+
 {identificador}	{	if(debug) System.out.println("token ID");
 				return sf.newSymbol("ID",sym.ID,new String(yytext()));
 			}
-{nuevalinea}       {lineanum++;}
+{nuevalinea}    {       if(debug) System.out.println("token FL");
+				return sf.newSymbol("FL",sym.FL);
+			}
 {espacio}    { /* saltos espacios en blanco*/}
-"{'[^}]+'}"  { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO"); }
+"{'[^}]+'}"  { /* salto comentarios */ if(debug) System.out.println("token COMENTARIO");
+                                        return sf.newSymbol("COMEN", sym.COMEN);}
+[A-Za-z][A-Z|a-z|0-9]*(\.[A-Z|a-z|0-9]*)?\%  {  if(debug) System.out.println("token ID2");
+                                        	return sf.newSymbol("ID2",sym.ID2,yytext());}
+\"[^(\"|\r\n)]*\" {	if(debug) System.out.println("token COMILLAS");
+                    	return sf.newSymbol("COMILLAS",sym.COMILLAS,yytext());}
 .               {System.err.println("Caracter Ilegal encontrado en analisis lexico: " + yytext() + "\n");}
