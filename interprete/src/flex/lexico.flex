@@ -1,20 +1,23 @@
 package flex;
 
 import java_cup.runtime.SymbolFactory;
+import java.io.FileInputStream;
 
 %%
 %cup
 %class Scanner
 %{
-	public Scanner(java.io.InputStream r, SymbolFactory sf){
-		this(r);
-		this.sf=sf;
-		lineanum=0;
-		debug=true;
-	}
-	private SymbolFactory sf;
+    private SymbolFactory sf;
 	private int lineanum;
 	private boolean debug;
+
+	public Scanner(java.io.InputStream r, SymbolFactory sf){
+                this(r);
+                this.sf=sf;
+                lineanum=0;
+                debug=true;
+        }
+   
 %}
 %eofval{
     return sf.newSymbol("EOF",sym.EOF);
@@ -80,9 +83,6 @@ espacio		= [ \t]+
 			}
 "do"            {	if(debug) System.out.println("token DO");
 			return sf.newSymbol("DO",sym.DO);
-			}
-"rem"           {	if(debug) System.out.println("token REM");
-			return sf.newSymbol("REM",sym.REM);
 			}
 "dim"           {	if(debug) System.out.println("token DIM");
 			return sf.newSymbol("DIM",sym.DIM);

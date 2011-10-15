@@ -388,8 +388,8 @@ Mas informacion en: http//4thmouse.com/index.php/2007/02/15/using-custom-symbols
 	public static void main(String args[]) throws Exception {
 		//TinySymbolFactory sf = new TinySymbolFactory();
 		SymbolFactory sf = new DefaultSymbolFactory();
-		if (args.length==0) 
-			new parser(new Scanner(System.in,sf),sf).parse();
+		if (args.length==0)
+                          new parser(new Scanner(System.in,sf)).parse();
 		else 
 			new parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
 	}
