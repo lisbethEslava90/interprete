@@ -162,13 +162,13 @@ nuevalinea	= \n
 			return sf.newSymbol("DIM",sym.DIM);
 			}
 as\ integer     {	if(debug) System.out.println("token AS INTEGER");
-                        return sf.newSymbol("AS INTEGER",sym.pentero);
+                        return sf.newSymbol("ASI",sym.pentero);
                         }
 as\ string     {	if(debug) System.out.println("token AS STRING");
-                        return sf.newSymbol("AS STRING",sym.pentero);
+                        return sf.newSymbol("ASS",sym.pentero);
                         }
 as\ double     {	if(debug) System.out.println("token AS DOUBLE");
-                        return sf.newSymbol("AS INTEGER",sym.pentero);
+                        return sf.newSymbol("ASD",sym.pentero);
                         }
 
 ","             {	if(debug) System.out.println("token COMA");

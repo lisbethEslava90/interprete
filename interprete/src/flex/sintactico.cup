@@ -36,7 +36,7 @@ terminal ELSE;
 terminal END;
 terminal UNTIL;
 terminal String ID;
-terminal String ID2;
+terminal String NUMP;
 terminal String COMILLAS;
 terminal Integer NUM;
 terminal SUB; /*falta*/
@@ -54,9 +54,10 @@ terminal DO;
 terminal COMEN;
 terminal DIM;
 terminal INT;
-terminal AS;
+terminal ASI;
+terminal ASS;
+terminal ASD;
 terminal STRING; /*falta*/
-terminal LONG; /*falta*/
 terminal DOU; /*falta*/
 terminal AND; 
 terminal OR;
@@ -82,6 +83,7 @@ terminal COM;
 terminal COMA;
 terminal MOD;
 terminal CIR;
+terminal ELSEIF;
 
 /* Simbolos No Terminales */
 non terminal program;
@@ -103,12 +105,22 @@ non terminal NodoBase input_stmt;
 non terminal NodoBase conjunto;
 
 /* Precedencia de operadores */
-precedence left NOT, AND, OR;
-precedence left COM, LT, LTE, RT, RTE, DIF;
-precedence left PLUS, MINUS;
-precedence left TIMES, OVER;
+precedence left NOT;
+precedence left AND;
+precedence left OR;
+precedence left COM;
+precedence left LT;
+precedence left LTE;
+precedence left RT;
+precedence left RTE;
+precedence left DIF;
+precedence left PLUS;
+precedence left MINUS;
+precedence left TIMES;
+precedence left OVER;
 precedence left CIR;
-precedence left LPAREN, RPAREN;
+precedence left LPAREN;
+precedence left RPAREN;
 
 /* REGLAS GRAMATICALES */
 program     ::= stmt_seq:s	{: if(debug) System.out.println("\t regla 1a"); 
@@ -196,16 +208,16 @@ while_stmt     ::= WHILE exp:ex FL stmt_seq:pwhile WEND {: if(debug) System.out.
 		:}
 		;
 
-dim_stmt ::= DIM ID:var AS INT {: if(debug) System.out.println("\t regla 5"); 
+dim_stmt ::= DIM ID:var ASI {: if(debug) System.out.println("\t regla 5"); 
 							RESULT = new NodoDim(var);
 		:}
-		| DIM ID:var AS INT COMA conj_var:con {: if(debug) System.out.println("\t regla 5"); 
+		| DIM ID:var ASI COMA conj_var:con {: if(debug) System.out.println("\t regla 5"); 
 							RESULT = new NodoDim(var,con);
 		:}
-		| DIM ID2:var {: if(debug) System.out.println("\t regla 5"); 
+		| DIM NUMP:var {: if(debug) System.out.println("\t regla 5");
 							RESULT = new NodoDim(var);
 		:}
-		| DIM ID2:var COMA conj_var:con {: if(debug) System.out.println("\t regla 5"); 
+		| DIM NUMP:var COMA conj_var:con {: if(debug) System.out.println("\t regla 5");
 							RESULT = new NodoDim(var,con);
 		:}
 		;
@@ -216,10 +228,10 @@ conj_var ::= ID:var COMA conj_var:cv {: if(debug) System.out.println("\t regla 5
 		| ID:var {: if(debug) System.out.println("\t regla 5"); 
 							RESULT = new NodoConj_var(var);
 		:}
-		| ID2:var COMA conj_var:cv {: if(debug) System.out.println("\t regla 5"); 
+		| NUMP:var COMA conj_var:cv {: if(debug) System.out.println("\t regla 5");
 							RESULT = new NodoConj_var(var,cv);
 		:}
-		| ID2:var {: if(debug) System.out.println("\t regla 5"); 
+		| NUMP:var {: if(debug) System.out.println("\t regla 5");
 							RESULT = new NodoConj_var(var);
 		:}
 		;
@@ -246,10 +258,10 @@ conjunto ::= simple_exp:es SEMI COMILLAS:pc SEMI conjunto:conju{: if(debug) Syst
 				:}
 				;
 
-input_stmt ::= INPUT ID2:va{: if(debug) System.out.println("\t regla 5"); 
+input_stmt ::= INPUT NUMP:va{: if(debug) System.out.println("\t regla 5");
 					RESULT=new NodoEntrada(va, va.toString());
 				:}
-		| INPUT COMILLAS:pc SEMI ID2:va{: if(debug) System.out.println("\t regla 5"); 
+		| INPUT COMILLAS:pc SEMI NUMP:va{: if(debug) System.out.println("\t regla 5");
 					RESULT=new NodoEntrada(pc,va);
 				:}
 				;
@@ -350,7 +362,7 @@ factor      ::= LPAREN exp:ex RPAREN	{: if(debug) System.out.println("\t regla 1
 					System.out.println("Ocurrio error en cup # 0005");
 					}
 					:}
-		| ID2:variable	{: if(debug) System.out.println("\t regla 12c"); 
+		| NUMP:variable	{: if(debug) System.out.println("\t regla 12c");
 					System.out.println("Devolvi nodo identificador2");
 					if(variable!=null){
 					RESULT= new NodoIdentificador(variable.toString());		
