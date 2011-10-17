@@ -84,6 +84,8 @@ terminal COMA;
 terminal MOD;
 terminal CIR;
 terminal ELSEIF;
+terminal DOUN;
+terminal STRD;
 
 /* Simbolos No Terminales */
 non terminal program;

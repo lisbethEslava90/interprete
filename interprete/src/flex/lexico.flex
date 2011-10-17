@@ -4,38 +4,52 @@ import java_cup.runtime.SymbolFactory;
 import java.io.FileInputStream;
 
 %%
-%cup
+%%
+%intwrap
 %class Scanner
 %{
-    private SymbolFactory sf;
-	private int lineanum;
-	private boolean debug;
 
-	public Scanner(java.io.InputStream r, SymbolFactory sf){
-                this(r);
-                this.sf=sf;
-                lineanum=0;
-                debug=true;
-        }
-   
+	private int lineanum;
+	private boolean debug=true;
+
+	static FileInputStream FInStr = null;
+	static String fInName ; //nombre archivo entrada
+
+	public static void main(String argv[]) 
+	throws java.io.IOException {
+		int numparams = argv.length; //número argumentos pasados
+		if ( numparams != 1) 
+		{ 	//error: nr. Parámetros incorrecto
+			System.out.println ("Número parámetros incorrecto!. Uso: ");
+			System.out.println ( "\tjava yylex archivo.EXT");
+			return; 
+		}
+		else 
+		{ 	
+			fInName = argv[0];		
+			Yylex yy = new Yylex(new FileInputStream(fInName));
+			while (yy.yylex() != -1) ; 
+		}
+	}
 %}
 %eofval{
-    return sf.newSymbol("EOF",sym.EOF);
+    return sym.EOF;
 %eofval}
 
+digito		= [0-9]
+numero		= {digito}+
+nuevalinea	= \n
+%%
 ^" "+   { }
 " "+$   { }
 ^(\r\n) { }
 
 ^rem[^(\n)]* { if(debug) System.out.println("token REM principio de linea"); }
 rem[^(\n)]* {   if(debug) System.out.println("token REM en cualquier parte");
-                return sf.newSymbol("SALTO DE LINEA",sym.psaltolinea);}
+                return sf.newSymbol("SALTO DE LINEA",sym.FL);}
 ^\'[^(\n)]* { if(debug) System.out.println("token COMENTARIO");}
 \'[^(\n)]* {    if(debug) System.out.println("token COMENTARIO");
-                return sf.newSymbol("SALTO DE LINEA",sym.psaltolinea);}
-digito		= [0-9]
-numero		= {digito}+
-nuevalinea	= \n
+                return sf.newSymbol("SALTO DE LINEA",sym.FL);}
 
 "="             {	if(debug) System.out.println("token ASSIGN");
 			return sf.newSymbol("ASSIGN",sym.ASSIGN);
@@ -162,13 +176,13 @@ nuevalinea	= \n
 			return sf.newSymbol("DIM",sym.DIM);
 			}
 as\ integer     {	if(debug) System.out.println("token AS INTEGER");
-                        return sf.newSymbol("ASI",sym.pentero);
+                        return sf.newSymbol("ASI",sym.ASI);
                         }
 as\ string     {	if(debug) System.out.println("token AS STRING");
-                        return sf.newSymbol("ASS",sym.pentero);
+                        return sf.newSymbol("ASS",sym.ASS);
                         }
 as\ double     {	if(debug) System.out.println("token AS DOUBLE");
-                        return sf.newSymbol("ASD",sym.pentero);
+                        return sf.newSymbol("ASD",sym.ASD);
                         }
 
 ","             {	if(debug) System.out.println("token COMA");

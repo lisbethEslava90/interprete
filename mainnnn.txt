@@ -1,0 +1,6 @@
+//public Scanner(java.io.InputStream r, SymbolFactory sf){
+//                this(r);
+//                this.sf=sf;
+//                lineanum=0;
+//                debug=true;
+//        }
