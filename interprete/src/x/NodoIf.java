@@ -1,4 +1,6 @@
-package NodosAST;
+package x;
+
+import NodosAST.NodoBase;
 
 public class NodoIf extends NodoBase {
 

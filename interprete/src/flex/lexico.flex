@@ -19,8 +19,10 @@ import java_cup.runtime.SymbolFactory;
 %eofval}
 
 digito	= [0-9]
-numero ={digito}+
-nuevalinea = \n | \n\r | \r\n
+numero ={digito}+ | "-"{digito}+
+nuevalinea = [\n]
+id = [A-Za-z][A-Z|a-z|0-9]*(\.[A-Z|a-z|0-9]*)?
+
 %%
 ^" "+   { }
 " "+$   { }
@@ -157,14 +159,17 @@ rem[^(\n)]* {   if(debug) System.out.println("token REM en cualquier parte");
 "dim"           {	if(debug) System.out.println("token DIM");
 			return sf.newSymbol("DIM",sym.DIM);
 			}
-as\ integer     {	if(debug) System.out.println("token AS INTEGER");
-                        return sf.newSymbol("ASI",sym.ASI);
+as              {	if(debug) System.out.println("token AS");
+                        return sf.newSymbol("AS",sym.AS);
                         }
-as\ string     {	if(debug) System.out.println("token AS STRING");
-                        return sf.newSymbol("ASS",sym.ASS);
+integer         {	if(debug) System.out.println("token INTEGER");
+                        return sf.newSymbol("INT",sym.INT);
                         }
-as\ double     {	if(debug) System.out.println("token AS DOUBLE");
-                        return sf.newSymbol("ASD",sym.ASD);
+string          {	if(debug) System.out.println("token STRING");
+                        return sf.newSymbol("STRING",sym.STRING);
+                        }
+double          {	if(debug) System.out.println("token DOUBLE");
+                        return sf.newSymbol("DOU",sym.DOU);
                         }
 
 ","             {	if(debug) System.out.println("token COMA");
@@ -188,12 +193,14 @@ as\ double     {	if(debug) System.out.println("token AS DOUBLE");
 [A-Za-z][A-Z|a-z|0-9]*(\.[A-Z|a-z|0-9]*)?\#  {  if(debug) System.out.println("token DOUN");
                                         	return sf.newSymbol("DOUN",sym.DOUN,yytext());
                                                 }
-[A-Za-z][A-Z|a-z|0-9]*(\.[A-Z|a-z|0-9]*)?  {  if(debug) System.out.println("token ID");
+{id}  {  if(debug) System.out.println("token ID");
                                         	return sf.newSymbol("ID",sym.ID,yytext());
                                                 }
-\"[^(\"|\r\n)]*\" {	if(debug) System.out.println("token COMILLAS");
+
+\"[^\"]*\" {	if(debug) System.out.println("token COMILLAS");
                     	return sf.newSymbol("COMILLAS",sym.COMILLAS,yytext());
                         }
+
 {nuevalinea}    {       if(debug) System.out.println("token FL");
 				return sf.newSymbol("FL",sym.FL);
                         }

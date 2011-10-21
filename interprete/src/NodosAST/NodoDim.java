@@ -1,38 +1,43 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package NodosAST;
 
+/**
+ *
+ * @author joferzz
+ */
 public class NodoDim extends NodoBase{
-	
-	public String var;
-	public NodoBase con;
-	
-	public NodoDim(){
-		super();
-		this.var = null;
-		this.con = null;
-	}
-	
-	public NodoDim(String var){
-		this.var=var;
-	}
-	
-	public NodoDim(String var,NodoBase con){
-		this.var=var;
-		this.con=con;
-	}
-	
-	public void setvar(String var){
-		this.var = var;
-	}
-	
-	public String getvar(){
-		return this.var;
-	}
-	
-	public void setcon(NodoDim con){
-		this.con = con;
-	}
-	
-	public NodoBase getcon(){
-		return this.con;
-	}
+    public NodoBase con;
+    public String variable;
+
+    public NodoDim() {
+    }
+
+    public NodoDim(String variable) {
+        this.variable = variable;
+    }
+    
+    public NodoDim(NodoBase con, String variable) {
+        this.con = con;
+        this.variable = variable;
+    }
+
+    public NodoBase getCon() {
+        return con;
+    }
+
+    public String getVariable() {
+        return variable;
+    }
+
+    public void setCon(NodoBase con) {
+        this.con = con;
+    }
+
+    public void setVariable(String variable) {
+        this.variable = variable;
+    }
+    
 }

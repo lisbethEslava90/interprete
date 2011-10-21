@@ -1,23 +1,13 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package NodosAST;
 
-public class NodoIdentificador extends NodoBase {
-	private String nombre;
-
-	public NodoIdentificador(String nombre) {
-		super();
-		this.nombre = nombre;
-	}
-
-	public NodoIdentificador() {
-		super();
-	}
-
-	public void setIdentificador(String nom) {
-		this.nombre = nom;
-	}
-	
-	public String getNombre() {
-		return nombre;
-	}
-
+/**
+ *
+ * @author joferzz
+ */
+public class NodoIdentificador {
+    
 }
