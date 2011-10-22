@@ -1,4 +1,4 @@
-package x;
+package NodosAST;
 
 import NodosAST.NodoBase;
 

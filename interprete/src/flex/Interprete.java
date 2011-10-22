@@ -7,6 +7,7 @@ package flex;
 import NodosAST.NodoBase;
 import NodosAST.NodoCadena;
 import NodosAST.NodoDim;
+import NodosAST.NodoIdentificador;
 import NodosAST.NodoImprimir;
 
 /**
@@ -32,6 +33,8 @@ public class Interprete {
         while(actual!=null){
             if(actual instanceof NodoImprimir){
                 imprimir((NodoImprimir)actual);
+            }else if(actual instanceof NodoDim){
+                imprimir((NodoDim)actual);
             }
             actual = actual.getHermanoDerecha(); 
         }
@@ -42,5 +45,8 @@ public class Interprete {
         String s = ((NodoCadena)nodoImprimir.getExpresion()).getCadena();
         System.out.println(s);
     }
-    
+    private void imprimir(NodoDim nodoImprimir) {
+        String r = ((NodoDim)nodoImprimir).getVariable();
+        System.out.println(r);
+    }
 }

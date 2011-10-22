@@ -143,9 +143,9 @@ program ::=
             System.out.println("\t program ::= stmt_seq END"); 
         ast = s;
     :}
-    | END {:
+    |ID {:
         if(debug) 
-            System.out.println("\t program ::= END"); 
+            System.out.println("\t program ::= ID"); 
     :}
     |  {:
         if(debug) 
@@ -159,18 +159,22 @@ program ::=
 
 stmt_seq ::= 
     stmt_seq:ini FL stmt:sent{:
-        if(debug) 
-            System.out.println("\t stmt_seq ::= stmt_seq FL stmt"); 
-        NodoBase hijoActual = ini;
-        if(hijoActual !=null){
-            while(hijoActual.TieneHermano()){
-                hijoActual = hijoActual.getHermanoDerecha();
+        if(debug) System.out.println("\t stmt_seq ::= stmt_seq FL stmt"); 
+            NodoBase hijoActual = ini;
+            if(hijoActual !=null){
+                while(hijoActual.TieneHermano()){
+                    hijoActual = hijoActual.getHermanoDerecha();
+		}
+		hijoActual.setHermanoDerecha(sent);
+                RESULT=ini;
+            }else{
+                RESULT=sent;
             }
-            hijoActual.setHermanoDerecha(sent);
-            RESULT=ini;
-        }else{
-            RESULT=sent;
-        }
+    :}
+    | assign_stmt:assig{:
+        if(debug) 
+            System.out.println("\t stmt_seq ::= stmt"); 
+        RESULT=assig;
     :}
     | stmt:sent{: 
         if(debug) 
@@ -185,7 +189,7 @@ stmt ::=
             System.out.println("\t stmt ::= print_stmt"); 
         RESULT = sentencia; 
     :}
-    | DIM conj_var:declaracion {:
+    | dim_stmt:declaracion {:
         if(debug)
             System.out.println("\t stmt ::= dim_stmt"); 
         RESULT = declaracion;
@@ -195,84 +199,43 @@ stmt ::=
             System.out.println("\t stmt ::= if_stmt"); 
         RESULT = sentif;
     :}
-    | assign_stmt:assig{:
-        if(debug) 
-            System.out.println("\t stmt ::= assign_stmt"); 
-        RESULT=assig;
-    :}
-    | for_stmt:ciclofor{:
-        if(debug)
-            System.out.println("\t stmt ::= for_stmt");
-        RESULT = ciclofor;
-    :}
-    | do_stmt:ciclodo{:
-        if(debug)
-            System.out.println("\t stmt ::= do_stmt");
-        RESULT = ciclodo;
-    :}
-    | while_stmt:ciclowhile{:
-        if(debug)
-            System.out.println("");
-    :}
 ;
 
 print_stmt ::=
-    PRINT COMILLAS:texto{:
+    PRINT COMILLAS:texto {:
         if(debug)
             System.out.println("\t print_stmt ::= PRINT COMILLAS"); 
         RESULT = new NodoImprimir(new NodoCadena(texto));
     :}
 ;
 
-conj_var ::=
-    conj_var:varias COMA dim_stmt:otras{:
-        if(debug)
-            System.out.println("\t conj_var ::= DIM dim_stmt COMA dim_stmt");
-        NodoBase hijoActual = varias;
-        if(hijoActual !=null){
-            while(hijoActual.TieneHermano()){
-                hijoActual = hijoActual.getHermanoDerecha();
-            }
-            hijoActual.setHermanoDerecha(otras);
-            RESULT = varias;
-        }else{
-            RESULT = otras;
-        }
-    :}
-    | dim_stmt:variable{:
-        if(debug)
-            System.out.println("\t conj_var ::= DIM dim_stmt");
-        RESULT = variable;
-    :}
-;
-
-dim_stmt ::=    
-    ID:var AS INT{: 
+dim_stmt ::=
+    DIM ID:var AS INT{: 
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID AS INT"); 
         RESULT = new NodoDim(var);
     :}
-    | ID:var AS STRING{: 
+    | DIM ID:var AS STRING{: 
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID AS STRING"); 
         RESULT = new NodoDim(var);
     :} 
-    | ID:var AS DOU{: 
+    | DIM ID:var AS DOU{: 
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID AS DOUBLE"); 
         RESULT = new NodoDim(var);
     :} 
-    | NUMP:var{:
+    | DIM NUMP:var{:
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID INTEGER %"); 
         RESULT = new NodoDim((String) var);
     :}
-    | DOUN:var{:
+    | DIM DOUN:var{:
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID DOUBLE #"); 
         RESULT = new NodoDim((String)var);
     :}
-    | STRD:var{:
+    | DIM STRD:var{:
         if(debug) 
             System.out.println("\t dim_stmt ::= DIM ID STRING $"); 
         RESULT = new NodoDim((String)var);
@@ -280,54 +243,15 @@ dim_stmt ::=
 ;
 
 if_stmt ::=
-    IF exp:ex THEN FL stmt_seq:pthen FL ENDIF{:
+    IF exp:cond THEN FL stmt_seq:pthen ENDIF{:
         if(debug) 
             System.out.println("\t if_stmt ::= IF exp THEN stmt_seq ENDIF"); 
-        RESULT = new NodoIf(ex,pthen);
+        RESULT = new NodoIf(cond,pthen);
     :} 
-    | IF exp:ex THEN FL stmt_seq:pthen FL ELSE FL stmt_seq:pelse FL ENDIF{:
-        if(debug)
-            System.out.println("\t if_stmt ::= IF exp THEN stmt_seq ELSE stmt_seq ENDIF"); 
-        RESULT = new NodoIf(ex,pthen,pelse);
-    :}
-    | IF exp:ex THEN FL stmt_seq:pthen FL ELSEIF exp:ex2 THEN FL stmt_seq:pthenif FL ELSE FL stmt_seq:pelse FL ENDIF{:
-        if(debug)
-            System.out.println("\t if_stmt ::= IF exp THEN stmt_seq ELSEIF stmt_seq ELSE stmt_seq ENDIF"); 
-        RESULT = new NodoIf(ex,ex2,pthen,pthenif,pelse);
-    :}
-;
-
-for_stmt ::=
-    FOR assign_stmt:indice TO exp:limite FL stmt_seq:pfor FL NEXT exp:siguiente {: 
-        if(debug) 
-            System.out.println("\t for_stmt ::= FOR assign_stmt TO exp FL stmt_seq FL NEXT exp"); 
-	RESULT = new NodoFor(indice,limite,siguiente,pfor);
-    :}
-    | FOR assign_stmt:indice TO exp:ex STEP exp:paso FL stmt_seq:instrucciones FL NEXT exp:siguiente{:
-        if(debug)
-            System.out.println("\t for_stmt ::=FOR assign_stmt TO exp STEP exp FL stmt_seq FL NEXT exp");
-        RESULT = new NodoFor(indice,ex,paso,siguiente,instrucciones);
-    :}
-;
-
-do_stmt ::=
-    DO FL stmt_seq:instru FL LOOP UNTIL exp:condicion{:
-        if(debug)
-            System.out.println("\t do_stmt ::= DO instrucciones LOOP UNTIL condicion");
-        RESULT = new NodoDo(instru,condicion);
-    :}
-;
-
-while_stmt ::=
-    WHILE exp:condicion FL stmt_seq:instrucciones FL WEND{:
-        if(debug)
-            System.out.println("\t while_stmt ::= WHILE exp stmt_seq WEND");
-        RESULT = new NodoWhile(condicion,instrucciones);
-    :}
 ;
 
 assign_stmt ::= 
-    ID:variable	ASSIGN exp:ex{: 
+    ID:variable	ASSIGN exp:ex FL{: 
         if(debug) 
             System.out.println("\t assign_stmt ::= ID ASSIGN exp");
         if(variable!=null)
